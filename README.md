@@ -33,6 +33,41 @@ The MVP includes:
 
 ---
 
+## 🔎 How It Differs from Existing Solutions
+
+1. **Decision‑intelligence focus** – not just data display; AI synthesises inputs into guidance.  
+2. **Multi‑source fusion** – market + weather + seasonal trends for richer context.  
+3. **Rural‑first UX** – designed for users with low digital literacy and basic devices.  
+4. **Explainable AI** – recommendations come with reasoning, confidence and disclaimers.
+
+## ✅ Solving the Problem
+
+- Provides real-time and historical market price insights.  
+- Forecasts price trends using AI models.  
+- Recommends optimal selling time and locations.  
+- Supports better crop planning decisions.
+
+## 🌟 Unique Selling Propositions
+
+- Rural-first AI design.  
+- Market forecasting using public data.  
+- Explainable and transparent recommendations.  
+- Scalable across regions and crops.
+
+## 🛠 Features Offered by the Solution
+
+1. Live mandi price aggregation (public data sources)  
+2. Historical price analysis  
+3. AI-based price forecasting  
+4. Weather-aware recommendations  
+5. Regional demand insights  
+6. AI query assistant for farmers and FPOs  
+7. Simple dashboards and visual analytics  
+8. Mobile-friendly access
+
+
+---
+
 ## 🏗 Architecture Overview
 
 High-Level Flow:
@@ -145,8 +180,28 @@ Day 7: Demo recording and submission
 cd backend
 pip install -r requirements.txt
 uvicorn main:app --reload
+```
 
-Frontend
+Once the server is running, you can exercise the new API endpoints:
+
+```bash
+# health check
+curl http://127.0.0.1:8000/health
+
+# fetch prices
+curl "http://127.0.0.1:8000/prices?crop=wheat&lat=26.9&lon=80.9"
+
+# get forecast
+curl "http://127.0.0.1:8000/forecast?crop=wheat&lat=26.9&lon=80.9"
+
+# request a recommendation
+curl "http://127.0.0.1:8000/recommendation?crop=wheat&lat=26.9&lon=80.9&quantity=100"
+```
+
+### Frontend
+
+```bash
 cd frontend
 npm install
 npm start
+```

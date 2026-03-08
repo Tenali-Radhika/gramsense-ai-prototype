@@ -2,3 +2,5 @@ fastapi
 uvicorn[standard]
 pydantic
 hypothesis
+boto3
+python-dotenv

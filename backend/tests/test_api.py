@@ -13,4 +13,7 @@ def test_root():
 def test_health():
     r = client.get("/health")
     assert r.status_code == 200
-    assert r.json() == {"status": "ok"}
+    data = r.json()
+    assert data["status"] == "ok"
+    assert "aws_integration" in data
+    assert "version" in data

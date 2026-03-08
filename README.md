@@ -174,6 +174,104 @@ Bedrock (Explainable Output) → User
 python -m pytest backend/tests/ -v
 ```
 
+## ☁️ AWS Deployment Guide
+
+### Prerequisites for AWS Deployment
+
+1. **AWS Account** with credits (you have $100+ available)
+2. **AWS CLI** installed and configured
+3. **SSH Key Pair** for EC2 access
+
+### AWS Credentials Setup
+
+1. **Get your AWS credentials:**
+   - Go to AWS Console → IAM → Users → Your User → Security credentials
+   - Create Access Key (if you don't have one)
+   - Note down: `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
+
+2. **Configure AWS CLI:**
+   ```bash
+   aws configure
+   # Enter your Access Key ID, Secret Access Key, default region (us-east-1), and output format (json)
+   ```
+
+3. **Set environment variables (optional):**
+   ```bash
+   export AWS_ACCESS_KEY_ID=your_key_here
+   export AWS_SECRET_ACCESS_KEY=your_secret_here
+   export AWS_DEFAULT_REGION=us-east-1
+   ```
+
+### Quick Deployment to AWS
+
+1. **Make the deployment script executable:**
+   ```bash
+   chmod +x deploy.sh
+   ```
+
+2. **Run the deployment script:**
+   ```bash
+   ./deploy.sh
+   ```
+   - Enter your AWS region (default: us-east-1)
+   - Enter EC2 instance type (default: t3.micro - Free Tier eligible)
+   - Enter your SSH key pair name
+
+3. **The script will:**
+   - Create a CloudFormation template
+   - Set up an EC2 instance with security groups
+   - Configure nginx and systemd services
+   - Deploy your application
+
+4. **Access your deployed app:**
+   - The script will output the public IP address
+   - Visit: `http://your-instance-ip`
+   - API: `http://your-instance-ip/api/`
+
+### Manual EC2 Deployment
+
+If you prefer manual setup:
+
+1. **Launch EC2 instance:**
+   - Instance type: `t3.micro` (Free Tier)
+   - AMI: Amazon Linux 2
+   - Security group: Allow HTTP (80) and SSH (22)
+
+2. **Connect via SSH:**
+   ```bash
+   ssh -i your-key.pem ec2-user@your-instance-ip
+   ```
+
+3. **Run setup commands:**
+   ```bash
+   sudo yum update -y
+   sudo yum install -y python3 git nginx
+   git clone https://github.com/Tenali-Radhika/gramsense-ai-prototype.git
+   cd gramsense-ai-prototype
+   python3 -m venv venv
+   source venv/bin/activate
+   pip install -r backend/requirements.txt
+   ```
+
+4. **Configure services:**
+   - Copy the systemd service from `deploy.sh`
+   - Configure nginx as shown in the deployment script
+   - Start services
+
+### Cost Management
+
+- **Free Tier Limits:** Monitor usage in AWS Console → Billing
+- **Set Budget Alerts:** $10/month warning as safety buffer
+- **Stop Instances:** When not in use to avoid charges
+- **Use CloudWatch:** Set alarms for EC2 usage
+
+### Troubleshooting AWS Deployment
+
+- **Permission Denied:** Check IAM permissions for EC2, CloudFormation
+- **Key Pair Issues:** Ensure key pair exists in your AWS region
+- **Connection Timeout:** Check security groups allow SSH/HTTP
+- **Service Failures:** Check CloudWatch logs in EC2 instance
+
 ## 📋 Manual Setup Guide
 
 ### Prerequisites

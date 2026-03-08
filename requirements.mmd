@@ -1,0 +1,109 @@
+# GramSense AI - Requirements (Mermaid Format)
+
+```mermaid
+mindmap
+  root((GramSense AI))
+    Target Users
+      Small Farmers
+      FPOs
+      Extension Workers
+    Core Features
+      Price Information
+        Real-time Prices
+        Historical Trends
+        Market Comparison
+      AI Forecasting
+        7-30 Day Predictions
+        Confidence Intervals
+        Weather Integration
+      Recommendations
+        Sell/Hold/Wait Advice
+        Optimal Markets
+        Crop Planning
+      AI Assistant
+        Natural Language
+        Contextual Help
+        Farmer-Friendly
+    Technical Requirements
+      Web Interface
+        Responsive Design
+        Mobile-First
+        Simple UX
+      Backend API
+        RESTful Design
+        FastAPI Framework
+        Pydantic Models
+      Data Sources
+        Synthetic Data
+        Public Datasets
+        Weather APIs
+      AWS Infrastructure
+        EC2 Compute
+        S3 Storage
+        CloudFormation
+    Non-Functional
+      Performance
+        <2s Response Time
+        1000+ Users
+        99.5% Uptime
+      Security
+        No Personal Data
+        Input Validation
+        Secure APIs
+      Scalability
+        Cloud-Native
+        Auto-Scaling
+        Modular Design
+```
+
+## Functional Requirements Details
+
+### User Stories
+- As a farmer, I want to check current crop prices so I can decide when to sell
+- As a farmer, I want weather-aware recommendations so I can optimize my selling timing
+- As a farmer, I want to query in natural language so I can get quick answers
+- As an FPO, I want regional demand insights so I can plan better
+
+### Acceptance Criteria
+- Price API returns data within 1 second
+- Recommendations include confidence scores
+- Interface works on mobile devices
+- AI assistant handles 80% of common queries
+
+## Data Flow Requirements
+
+```mermaid
+flowchart TD
+    A[User Query] --> B{Query Type}
+    B -->|Price| C[Fetch Price Data]
+    B -->|Forecast| D[Generate Prediction]
+    B -->|Recommend| E[Analyze Factors]
+    B -->|Query| F[Process Natural Language]
+
+    C --> G[Return Results]
+    D --> G
+    E --> G
+    F --> G
+
+    G --> H[Display to User]
+```
+
+## API Requirements
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant F as Frontend
+    participant B as Backend
+    participant D as Data Layer
+    participant A as AI Engine
+
+    U->>F: Select crop & location
+    F->>B: API Request
+    B->>D: Fetch data
+    D-->>B: Return data
+    B->>A: Process with AI
+    A-->>B: Generate insights
+    B-->>F: Return response
+    F-->>U: Display results
+```

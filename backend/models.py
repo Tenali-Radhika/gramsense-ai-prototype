@@ -45,9 +45,13 @@ class Forecast(BaseModel):
 
 
 class Recommendation(BaseModel):
-    type: str  # 'SELL_NOW' | 'WAIT' | 'CHANGE_MARKET' | 'PLAN_CROP'
+    type: str  # 'SELL_NOW' | 'WAIT' | 'CHANGE_MARKET' | 'PLAN_CROP' | 'MONITOR'
     priority: str  # 'HIGH' | 'MEDIUM' | 'LOW'
     explanation: str
+    supportingData: Optional[Any] = None
+    confidence: Optional[float] = None
+    validityPeriod: Optional[dict] = None
+    disclaimers: Optional[List[str]] = None
     supportingData: Any
     confidence: float
     validityPeriod: Optional[Any] = None

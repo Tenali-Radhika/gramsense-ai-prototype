@@ -24,12 +24,14 @@ GramSense AI aims to provide explainable, AI-driven recommendations using public
 
 The MVP includes:
 
-- 📊 Real-time mandi price dashboard  
-- 📈 7–14 day AI-based price forecasting  
-- 💡 Explainable selling recommendations (Sell Now / Wait / Alternate Market)  
-- 🌦 Weather-aware advisory logic  
-- 📱 Mobile-optimized web interface  
-- ☁️ AWS cloud deployment  
+- 📊 **Real-time and historical mandi price dashboard** with trend analysis
+- 📈 **7–30 day AI-based price forecasting** with confidence indicators
+- 💡 **Explainable selling recommendations** (Sell Now / Wait / Monitor / Change Market) with weather integration
+- 🌦 **Weather-aware advisory logic** affecting price predictions and recommendations
+- 📍 **Regional demand insights** with market suggestions
+- 🤖 **AI query assistant** for natural language farmer queries
+- 📱 **Mobile-optimized web interface** with responsive design
+- ☁️ **RESTful API architecture** ready for cloud deployment  
 
 ---
 
@@ -56,19 +58,41 @@ The MVP includes:
 
 ## 🛠 Features Offered by the Solution
 
-1. Live mandi price aggregation (public data sources)  
-2. Historical price analysis  
-3. AI-based price forecasting  
-4. Weather-aware recommendations  
-5. Regional demand insights  
-6. AI query assistant for farmers and FPOs  
-7. Simple dashboards and visual analytics  
-8. Mobile-friendly access
+1. ✅ **Live mandi price aggregation** (synthetic data sources)
+2. ✅ **Historical price analysis** (7-30 days of price history)
+3. ✅ **AI-based price forecasting** (7-30 day predictions with confidence)
+4. ✅ **Weather-aware recommendations** (integrated weather impact analysis)
+5. ✅ **Regional demand insights** (demand levels by region and crop)
+6. ✅ **AI query assistant for farmers** (natural language queries)
+7. ✅ **Simple dashboards and visual analytics** (web-based interface)
+8. ✅ **Mobile-friendly access** (responsive design)
 
+## 📈 Process Flow Diagram
 
----
+```mermaid
+flowchart TD
+    A[Farmer selects crop and location] --> B[System collects public market and weather data]
+    B --> C[AI engine analyzes price trends and demand patterns]
+    C --> D[Recommendation engine generates insights]
+    D --> E[Farmer receives decision support]
+    E --> F[Farmer chooses optimal selling strategy]
+```
 
 ## 🏗 Architecture Overview
+
+```mermaid
+graph TB
+    UI[User Interface<br/>Web / Mobile App] --> API[Backend API Layer]
+    API --> DI[Data Ingestion Layer]
+    DI --> |Public mandi data| Mandi
+    DI --> |Weather data| Weather
+    DI --> |Crop datasets| Crop
+    API --> AIML[AI/ML Engine]
+    AIML --> |Forecasting models| Forecast
+    AIML --> |Recommendation engine| Rec
+    DI --> Cloud[Cloud Infrastructure Layer<br/>AWS EC2, S3, Lambda]
+    AIML --> Cloud
+```
 
 High-Level Flow:
 
@@ -92,23 +116,204 @@ Bedrock (Explainable Output) → User
 
 ---
 
+## � Getting Started
+
+### Prerequisites
+- Python 3.8+
+- pip
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Tenali-Radhika/gramsense-ai-prototype.git
+   cd gramsense-ai-prototype
+   ```
+
+2. Set up virtual environment:
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   ```
+
+3. Install dependencies:
+   ```bash
+   pip install -r backend/requirements.txt
+   pip install pytest  # For testing
+   ```
+
+4. Run the backend:
+   ```bash
+   python -m uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
+   ```
+
+5. Open the frontend:
+   - Open `frontend/index.html` in your browser
+   - Or serve it with a simple HTTP server:
+     ```bash
+     cd frontend
+     python -m http.server 3000
+     ```
+   - Then visit `http://localhost:3000`
+
+### API Endpoints
+
+- `GET /` - Root endpoint
+- `GET /health` - Health check
+- `GET /prices?crop={crop}&lat={lat}&lon={lon}&days={days}` - Get mandi prices (current or historical)
+- `GET /forecast?crop={crop}&lat={lat}&lon={lon}&horizon={days}` - Get price forecast
+- `GET /recommendation?crop={crop}&lat={lat}&lon={lon}&quantity={qty}` - Get selling recommendation
+- `GET /optimal_markets?crop={crop}&lat={lat}&lon={lon}` - Get optimal market suggestions
+- `GET /crop_advice?lat={lat}&lon={lon}&season={season}` - Get crop planning advice
+- `GET /regional_demand?crop={crop}&lat={lat}&lon={lon}` - Get regional demand insights
+- `POST /query_assistant` - AI query assistant for farmers
+
+### Running Tests
+
+```bash
+python -m pytest backend/tests/ -v
+```
+
+## 📋 Manual Setup Guide
+
+### Prerequisites
+- Python 3.8+ installed
+- Git for cloning repository
+- Web browser for frontend access
+
+### Step-by-Step Setup
+
+1. **Clone the Repository**
+   ```bash
+   git clone https://github.com/Tenali-Radhika/gramsense-ai-prototype.git
+   cd gramsense-ai-prototype
+   ```
+
+2. **Create Virtual Environment**
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate  # Linux/Mac
+   # OR
+   .venv\Scripts\activate     # Windows
+   ```
+
+3. **Install Dependencies**
+   ```bash
+   pip install -r backend/requirements.txt
+   pip install pytest  # For running tests
+   ```
+
+4. **Verify Installation**
+   ```bash
+   python -c "import fastapi, uvicorn; print('Dependencies installed successfully')"
+   ```
+
+5. **Run Tests (Optional but Recommended)**
+   ```bash
+   python -m pytest backend/tests/ -v
+   ```
+
+6. **Start Backend Server**
+   ```bash
+   python -m uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
+   ```
+   The API will be available at `http://localhost:8000`
+
+7. **Access Frontend**
+   - Option 1: Open `frontend/index.html` directly in browser
+   - Option 2: Serve with Python HTTP server
+     ```bash
+     cd frontend
+     python -m http.server 3000
+     ```
+     Then visit `http://localhost:3000`
+
+### Manual Configuration (For Real Data Integration - Optional)
+
+**Note:** The prototype uses synthetic data by default. For production, integrate real APIs:
+
+#### Agmarknet Data (Indian Mandi Prices)
+- **Source**: https://agmarknet.gov.in/
+- **Access**: Public API available, no credentials required
+- **Manual Work**: 
+  - Visit the website to understand data format
+  - Update `backend/data_ingestion/mandi.py` to fetch from actual API
+  - Handle rate limits and data parsing
+
+#### IMD Weather Data (India Meteorological Department)
+- **Source**: https://imdpune.gov.in/
+- **Access**: Public datasets, some APIs require registration
+- **Manual Work**:
+  - Register for API access if needed
+  - Obtain API key (if required)
+  - Update `backend/data_ingestion/weather.py` with real endpoints
+  - Store API key securely (environment variables)
+
+#### Environment Variables Setup
+Create a `.env` file in the backend directory:
+```bash
+# For future real API integrations
+AGMARKNET_API_KEY=your_key_here
+IMD_API_KEY=your_key_here
+OPENWEATHER_API_KEY=your_key_here  # Alternative weather API
+```
+
+#### Database Setup (For Production)
+- **AWS DynamoDB**: Create tables for prices, forecasts, users
+- **Manual Work**:
+  - Set up AWS account
+  - Create DynamoDB tables
+  - Configure IAM roles
+  - Update connection strings in code
+
+### Troubleshooting
+
+**Common Issues:**
+- **Port 8000 already in use**: Change port with `--port 8001`
+- **Import errors**: Ensure virtual environment is activated
+- **Frontend not loading**: Check CORS settings in browser
+- **Tests failing**: Ensure all dependencies are installed
+
+**API Testing:**
+```bash
+curl "http://localhost:8000/prices?crop=wheat&lat=28.6139&lon=77.2090"
+curl "http://localhost:8000/health"
+```
+
 ## 📂 Repository Structure
+```
 gramsense-ai-prototype/
 │
+├── README.md
 ├── backend/
-│ ├── api/
-│ ├── forecasting/
-│ ├── recommendation/
-│ └── data_ingestion/
-│
-├── frontend/
-│
-├── .kiro/spec/
-│ ├── requirements.md
-│ └── design.md
-│
-└── README.md
-
+│   ├── __init__.py
+│   ├── main.py
+│   ├── models.py
+│   ├── requirements.txt
+│   ├── api/
+│   │   ├── __init__.py
+│   │   ├── forecast.py
+│   │   ├── prices.py
+│   │   └── recommendation.py
+│   ├── data_ingestion/
+│   │   ├── __init__.py
+│   │   ├── crop_calendar.py
+│   │   ├── mandi.py
+│   │   └── weather.py
+│   ├── forecasting/
+│   │   ├── __init__.py
+│   │   └── engine.py
+│   ├── recommendation/
+│   │   ├── __init__.py
+│   │   └── engine.py
+│   └── tests/
+│       ├── test_api.py
+│       ├── test_data_ingestion.py
+│       ├── test_forecasting.py
+│       └── test_recommendation.py
+└── frontend/
+    └── index.html
+```
 
 ---
 

@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta, date, timezone
 from typing import List
 
 from ..models import Forecast, PricePrediction, ForecastFactor, Location
@@ -12,6 +12,7 @@ def generate_price_forecast(crop: str, location: Location, horizon: int = 30) ->
         predictions.append(
             PricePrediction(date=start + timedelta(days=i), price=100.0 + i, confidence=0.8)
         )
+    now = datetime.now(timezone.utc)
     forecast = Forecast(
         crop=crop,
         location=location,
@@ -19,8 +20,8 @@ def generate_price_forecast(crop: str, location: Location, horizon: int = 30) ->
         confidenceLevel=0.75,
         methodology="synthetic-model",
         factors=[ForecastFactor(name="trend", impact=0.5, description="increasing trend")],
-        generatedAt=datetime.utcnow(),
-        validUntil=datetime.utcnow() + timedelta(days=horizon),
+        generatedAt=now,
+        validUntil=now + timedelta(days=horizon),
     )
     return forecast
 

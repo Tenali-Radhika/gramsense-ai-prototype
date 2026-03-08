@@ -11,7 +11,7 @@ from backend.recommendation.engine import (
 def test_recommendation(crop, lat, lon, quantity):
     loc = Location(latitude=lat, longitude=lon)
     rec = generate_selling_recommendation(crop, loc, quantity)
-    assert rec.type in {"SELL_NOW", "WAIT", "CHANGE_MARKET", "PLAN_CROP"}
+    assert rec.type in {"SELL_NOW", "WAIT", "CHANGE_MARKET", "PLAN_CROP", "MONITOR"}
     assert 0.0 <= rec.confidence <= 1.0
 
 

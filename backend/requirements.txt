@@ -4,3 +4,6 @@ pydantic
 hypothesis
 boto3
 python-dotenv
+pytest
+pytest-cov
+httpx

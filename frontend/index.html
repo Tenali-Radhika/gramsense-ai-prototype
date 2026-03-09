@@ -5,174 +5,529 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GramSense AI - Rural Market Intelligence</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f4; }
+        * { box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
         .container { max-width: 1200px; margin: 0 auto; }
-        header { text-align: center; margin-bottom: 30px; }
-        .section { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        header { 
+            text-align: center; 
+            margin-bottom: 30px; 
+            color: white;
+            padding: 20px;
+        }
+        header h1 { margin: 0; font-size: 2.5em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        header p { margin: 10px 0 0 0; font-size: 1.2em; opacity: 0.9; }
+        .section { 
+            background: white; 
+            padding: 25px; 
+            margin-bottom: 20px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .section h2, .section h3 { 
+            margin-top: 0; 
+            color: #333;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
         .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; }
-        input, select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
-        button { background: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; }
-        button:hover { background: #218838; }
-        .dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .chart { height: 300px; background: #eee; display: flex; align-items: center; justify-content: center; border-radius: 4px; }
-        .recommendation { background: #e9ecef; padding: 15px; border-left: 4px solid #28a745; }
+        label { 
+            display: block; 
+            margin-bottom: 5px; 
+            font-weight: 600;
+            color: #555;
+        }
+        input, select { 
+            width: 100%; 
+            padding: 10px; 
+            border: 2px solid #ddd; 
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        button { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; 
+            padding: 12px 24px; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        button:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .dashboard { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 20px; 
+        }
+        @media (max-width: 768px) {
+            .dashboard { grid-template-columns: 1fr; }
+        }
+        .chart { 
+            min-height: 200px; 
+            background: #f8f9fa; 
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        .chart-content {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .price-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .price-card .price {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .price-card .label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        .recommendation { 
+            background: #e7f3ff; 
+            padding: 20px; 
+            border-left: 4px solid #667eea;
+            border-radius: 6px;
+        }
+        .recommendation.high { border-left-color: #28a745; background: #d4edda; }
+        .recommendation.medium { border-left-color: #ffc107; background: #fff3cd; }
+        .recommendation.low { border-left-color: #dc3545; background: #f8d7da; }
+        .confidence-bar {
+            background: #e0e0e0;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .confidence-fill {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            transition: width 0.5s ease;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #dc3545;
+        }
+        .query-input-group {
+            display: flex;
+            gap: 10px;
+        }
+        .query-input-group input {
+            flex: 1;
+        }
+        .query-input-group button {
+            flex-shrink: 0;
+        }
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .stat-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .stat-card .value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .stat-card .label {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>GramSense AI</h1>
+            <h1>🌾 GramSense AI</h1>
             <p>Rural Market Intelligence & Decision Support Platform</p>
         </header>
 
         <div class="section">
-            <h2>Crop and Location Selection</h2>
+            <h2>📍 Crop and Location Selection</h2>
             <div class="form-group">
                 <label for="crop">Select Crop:</label>
                 <select id="crop">
-                    <option value="wheat">Wheat</option>
-                    <option value="rice">Rice</option>
-                    <option value="maize">Maize</option>
-                    <option value="cotton">Cotton</option>
+                    <option value="wheat">Wheat (गेहूं)</option>
+                    <option value="rice">Rice (चावल)</option>
+                    <option value="maize">Maize (मक्का)</option>
+                    <option value="cotton">Cotton (कपास)</option>
+                    <option value="sugarcane">Sugarcane (गन्ना)</option>
+                    <option value="potato">Potato (आलू)</option>
+                    <option value="onion">Onion (प्याज)</option>
+                    <option value="tomato">Tomato (टमाटर)</option>
+                    <option value="soybean">Soybean (सोयाबीन)</option>
+                    <option value="groundnut">Groundnut (मूंगफली)</option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="location">Location (Latitude, Longitude):</label>
-                <input type="text" id="location" placeholder="e.g., 28.6139, 77.2090" value="28.6139, 77.2090">
+                <label for="region">Region:</label>
+                <select id="region" onchange="updateLocation()">
+                    <option value="28.6139,77.2090,Delhi">Delhi</option>
+                    <option value="19.0760,72.8777,Mumbai">Mumbai</option>
+                    <option value="12.9716,77.5946,Bangalore">Bangalore</option>
+                    <option value="22.5726,88.3639,Kolkata">Kolkata</option>
+                    <option value="13.0827,80.2707,Chennai">Chennai</option>
+                    <option value="17.3850,78.4867,Hyderabad">Hyderabad</option>
+                    <option value="18.5204,73.8567,Pune">Pune</option>
+                    <option value="23.0225,72.5714,Ahmedabad">Ahmedabad</option>
+                </select>
             </div>
             <div class="form-group">
                 <label for="days">Historical Days:</label>
                 <input type="number" id="days" value="7" min="1" max="30">
             </div>
-            <button onclick="fetchData()">Get Market Intelligence</button>
+            <button onclick="fetchData()">🔍 Get Market Intelligence</button>
         </div>
 
-        <div class="dashboard">
-            <div class="section">
-                <h3>Price Trend Dashboard</h3>
-                <div class="chart" id="priceChart">Price Trend Chart</div>
-            </div>
-            <div class="section">
-                <h3>AI Recommendation Panel</h3>
-                <div class="recommendation" id="recommendation">
-                    Select a crop and location to get recommendations.
+        <div id="results" style="display: none;">
+            <div class="dashboard">
+                <div class="section">
+                    <h3>💰 Price Dashboard</h3>
+                    <div id="priceContent"></div>
+                </div>
+                <div class="section">
+                    <h3>🎯 AI Recommendation</h3>
+                    <div id="recommendation"></div>
                 </div>
             </div>
-        </div>
 
-        <div class="section">
-            <h3>Forecast Graph View</h3>
-            <div class="chart" id="forecastChart">7-Day Price Forecast</div>
-        </div>
-
-        <div class="section">
-            <h3>Market Comparison Screen</h3>
-            <div class="chart" id="comparisonChart">Nearby Market Comparison</div>
-        </div>
-
-        <div class="section">
-            <h3>AI Query Assistant</h3>
-            <div class="form-group">
-                <input type="text" id="query" placeholder="Ask me about prices, weather, or selling advice..." style="width: 70%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                <button onclick="askQuery()" style="padding: 8px 15px;">Ask</button>
+            <div class="section">
+                <h3>📈 Price Forecast (30 Days)</h3>
+                <div class="chart">
+                    <div id="forecastChart" class="chart-content"></div>
+                </div>
             </div>
-            <div id="queryResponse" class="recommendation" style="margin-top: 10px;"></div>
+
+            <div class="section">
+                <h3>🏪 Market & Demand Insights</h3>
+                <div id="demandInsights"></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>💬 AI Query Assistant</h3>
+            <div class="query-input-group">
+                <input type="text" id="query" placeholder="Ask me: What's the best time to sell wheat? Will prices go up?" onkeypress="if(event.key==='Enter') askQuery()">
+                <button onclick="askQuery()">Ask</button>
+                <button onclick="clearConversation()" style="background: #dc3545; margin-left: 10px;">Clear History</button>
+            </div>
+            <div id="queryResponse" style="margin-top: 15px; max-height: 400px; overflow-y: auto;"></div>
+        </div>
+
+        <div id="loading" class="section loading" style="display: none;">
+            <p>⏳ Loading market intelligence...</p>
         </div>
     </div>
 
     <script>
+        const API_BASE = 'http://localhost:8000';
+
+        function updateLocation() {
+            // Location is now handled by region selector
+        }
+
         async function fetchData() {
             const crop = document.getElementById('crop').value;
-            const [lat, lon] = document.getElementById('location').value.split(',').map(x => parseFloat(x.trim()));
+            const regionData = document.getElementById('region').value.split(',');
+            const lat = parseFloat(regionData[0]);
+            const lon = parseFloat(regionData[1]);
+            const regionName = regionData[2];
             const days = document.getElementById('days').value;
 
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+
             try {
-                // Fetch historical prices
-                const priceResponse = await fetch(`http://localhost:8000/prices?crop=${crop}&lat=${lat}&lon=${lon}&days=${days}`);
-                const prices = await priceResponse.json();
+                // Fetch all data in parallel
+                const [pricesRes, forecastRes, recRes, demandRes] = await Promise.all([
+                    fetch(`${API_BASE}/prices?crop=${crop}&lat=${lat}&lon=${lon}&days=${days}`),
+                    fetch(`${API_BASE}/forecast?crop=${crop}&lat=${lat}&lon=${lon}&horizon=30`),
+                    fetch(`${API_BASE}/recommendation?crop=${crop}&lat=${lat}&lon=${lon}&quantity=100`),
+                    fetch(`${API_BASE}/regional_demand?crop=${crop}&lat=${lat}&lon=${lon}`)
+                ]);
 
-                // Fetch forecast
-                const forecastResponse = await fetch(`http://localhost:8000/forecast?crop=${crop}&lat=${lat}&lon=${lon}`);
-                const forecast = await forecastResponse.json();
+                const prices = await pricesRes.json();
+                const forecast = await forecastRes.json();
+                const recommendation = await recRes.json();
+                const demand = await demandRes.json();
 
-                // Fetch recommendation
-                const recResponse = await fetch(`http://localhost:8000/recommendation?crop=${crop}&lat=${lat}&lon=${lon}&quantity=100`);
-                const recommendation = await recResponse.json();
-
-                // Fetch regional demand
-                const demandResponse = await fetch(`http://localhost:8000/regional_demand?crop=${crop}&lat=${lat}&lon=${lon}`);
-                const demand = await demandResponse.json();
-
-                updateUI(prices, forecast, recommendation, demand);
+                updateUI(prices, forecast, recommendation, demand, regionName);
+                
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('results').style.display = 'block';
             } catch (error) {
                 console.error('Error fetching data:', error);
-                document.getElementById('recommendation').innerText = 'Error loading data. Please try again.';
+                document.getElementById('loading').innerHTML = `
+                    <div class="error">
+                        ❌ Error loading data. Please ensure the backend server is running on port 8000.
+                        <br><small>Error: ${error.message}</small>
+                    </div>
+                `;
             }
         }
+
+        // Session management for conversation history
+        let sessionId = localStorage.getItem('gramsense_session_id');
 
         async function askQuery() {
             const query = document.getElementById('query').value;
             const crop = document.getElementById('crop').value;
-            const [lat, lon] = document.getElementById('location').value.split(',').map(x => parseFloat(x.trim()));
+            const regionData = document.getElementById('region').value.split(',');
+            const lat = parseFloat(regionData[0]);
+            const lon = parseFloat(regionData[1]);
 
             if (!query.trim()) return;
 
+            // Add user message to UI
+            const queryResponseDiv = document.getElementById('queryResponse');
+            const userMessageHtml = `
+                <div class="message user-message" style="background: #e3f2fd; padding: 10px; margin: 5px 0; border-radius: 8px;">
+                    <strong>You:</strong> ${query}
+                </div>
+            `;
+            
+            if (!queryResponseDiv.innerHTML.includes('user-message')) {
+                queryResponseDiv.innerHTML = userMessageHtml + '<div class="loading">🤔 Thinking...</div>';
+            } else {
+                queryResponseDiv.innerHTML += userMessageHtml + '<div class="loading">🤔 Thinking...</div>';
+            }
+
+            // Clear input
+            document.getElementById('query').value = '';
+
             try {
-                const response = await fetch('http://localhost:8000/query_assistant', {
+                const response = await fetch(`${API_BASE}/query_assistant`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        query: query,
-                        crop: crop,
-                        lat: lat,
-                        lon: lon
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        query, 
+                        crop, 
+                        lat, 
+                        lon,
+                        session_id: sessionId 
                     })
                 });
                 const result = await response.json();
-                document.getElementById('queryResponse').innerHTML = `
-                    <strong>Assistant:</strong> ${result.response}
-                    ${result.suggestion ? `<br><em>Suggestion: ${result.suggestion}</em>` : ''}
+                
+                // Store session ID
+                if (result.session_id) {
+                    sessionId = result.session_id;
+                    localStorage.setItem('gramsense_session_id', sessionId);
+                }
+
+                // Remove loading indicator
+                const loadingDiv = queryResponseDiv.querySelector('.loading');
+                if (loadingDiv) loadingDiv.remove();
+
+                // Add assistant response
+                const assistantMessageHtml = `
+                    <div class="message assistant-message" style="background: #f5f5f5; padding: 10px; margin: 5px 0; border-radius: 8px;">
+                        <strong>🤖 Assistant:</strong> ${result.response}
+                        ${result.suggestion ? `<br><br><em>💡 Suggestion: ${result.suggestion}</em>` : ''}
+                        ${result.suggestions ? `<br><br><strong>You can also ask:</strong><br>• ${result.suggestions.join('<br>• ')}` : ''}
+                    </div>
                 `;
+                queryResponseDiv.innerHTML += assistantMessageHtml;
+
+                // Scroll to bottom
+                queryResponseDiv.scrollTop = queryResponseDiv.scrollHeight;
             } catch (error) {
                 console.error('Query error:', error);
-                document.getElementById('queryResponse').innerText = 'Sorry, I couldn\'t process your query right now.';
+                const loadingDiv = queryResponseDiv.querySelector('.loading');
+                if (loadingDiv) loadingDiv.remove();
+                
+                queryResponseDiv.innerHTML += `
+                    <div class="error" style="background: #ffebee; padding: 10px; margin: 5px 0; border-radius: 8px; color: #c62828;">
+                        Sorry, I couldn't process your query right now.
+                    </div>
+                `;
             }
         }
 
-        function updateUI(prices, forecast, recommendation, demand) {
-            // Update price chart with historical data
+        function clearConversation() {
+            sessionId = null;
+            localStorage.removeItem('gramsense_session_id');
+            document.getElementById('queryResponse').innerHTML = '';
+        }
+
+        function updateUI(prices, forecast, recommendation, demand, regionName) {
+            // Update price dashboard
             if (prices && prices.length > 0) {
                 const latestPrice = prices[0];
-                let priceHistory = prices.slice(0, 7).map(p => `${p.timestamp.split('T')[0]}: ₹${p.price}`).join('<br>');
-                document.getElementById('priceChart').innerHTML = `
-                    <strong>Latest: ₹${latestPrice.price}/kg</strong><br>
-                    <small>Recent History:</small><br>${priceHistory}
+                const oldestPrice = prices[prices.length - 1];
+                const priceChange = ((latestPrice.price - oldestPrice.price) / oldestPrice.price * 100).toFixed(2);
+                const changeColor = priceChange >= 0 ? '#28a745' : '#dc3545';
+                const changeIcon = priceChange >= 0 ? '📈' : '📉';
+
+                const avgPrice = (prices.reduce((sum, p) => sum + p.price, 0) / prices.length).toFixed(2);
+                const maxPrice = Math.max(...prices.map(p => p.price)).toFixed(2);
+                const minPrice = Math.min(...prices.map(p => p.price)).toFixed(2);
+
+                document.getElementById('priceContent').innerHTML = `
+                    <div class="price-card">
+                        <div class="label">Current Price in ${regionName}</div>
+                        <div class="price">₹${latestPrice.price}</div>
+                        <div class="label">per ${latestPrice.unit}</div>
+                        <div style="margin-top: 10px; font-size: 1.1em;">
+                            ${changeIcon} <span style="color: ${changeColor >= 0 ? '#90EE90' : '#FFB6C1'}">
+                                ${priceChange >= 0 ? '+' : ''}${priceChange}%
+                            </span> (${prices.length} days)
+                        </div>
+                    </div>
+                    <div class="stat-grid">
+                        <div class="stat-card">
+                            <div class="value">₹${avgPrice}</div>
+                            <div class="label">Average</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="value">₹${maxPrice}</div>
+                            <div class="label">Highest</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="value">₹${minPrice}</div>
+                            <div class="label">Lowest</div>
+                        </div>
+                    </div>
                 `;
             }
 
             // Update recommendation
+            const priorityClass = recommendation.priority.toLowerCase();
+            const typeEmoji = {
+                'SELL_NOW': '✅',
+                'WAIT': '⏳',
+                'MONITOR': '👀',
+                'CHANGE_MARKET': '🔄',
+                'PLAN_CROP': '🌱'
+            };
+
             document.getElementById('recommendation').innerHTML = `
-                <strong>${recommendation.type}</strong><br>
-                ${recommendation.explanation}<br>
-                <small>Confidence: ${(recommendation.confidence * 100).toFixed(0)}%</small>
+                <div class="recommendation ${priorityClass}">
+                    <h4 style="margin-top: 0;">${typeEmoji[recommendation.type] || '📋'} ${recommendation.type.replace(/_/g, ' ')}</h4>
+                    <p style="font-size: 1.1em; margin: 10px 0;">${recommendation.explanation}</p>
+                    <div style="margin-top: 15px;">
+                        <strong>Confidence Level:</strong>
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" style="width: ${recommendation.confidence * 100}%"></div>
+                        </div>
+                        <small>${(recommendation.confidence * 100).toFixed(0)}% confident</small>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 0.9em; color: #666;">
+                        <strong>Priority:</strong> ${recommendation.priority}
+                    </div>
+                </div>
             `;
 
-            // Update forecast chart
-            const predictions = forecast.predictions.slice(0, 7);
-            document.getElementById('forecastChart').innerHTML = predictions.map(p =>
-                `${p.date}: ₹${p.price.toFixed(2)}<br>`
-            ).join('');
+            // Update forecast
+            const predictions = forecast.predictions.slice(0, 30);
+            const forecastStart = predictions[0].price;
+            const forecastEnd = predictions[predictions.length - 1].price;
+            const forecastChange = ((forecastEnd - forecastStart) / forecastStart * 100).toFixed(2);
+            
+            let forecastHTML = `
+                <div style="margin-bottom: 15px;">
+                    <strong>30-Day Forecast:</strong> ₹${forecastStart.toFixed(2)} → ₹${forecastEnd.toFixed(2)} 
+                    (${forecastChange >= 0 ? '+' : ''}${forecastChange}%)
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <strong>Methodology:</strong> ${forecast.methodology}
+                    <br><strong>Confidence:</strong> ${(forecast.confidenceLevel * 100).toFixed(0)}%
+                </div>
+            `;
 
-            // Update comparison with regional demand
-            document.getElementById('comparisonChart').innerHTML = `
-                <strong>Regional Demand: ${demand.demand_level}</strong><br>
-                <small>Region: ${demand.region}</small><br>
-                <small>Markets: ${demand.regional_markets.slice(0, 3).join(', ')}</small>
+            if (forecast.factors && forecast.factors.length > 0) {
+                forecastHTML += '<div><strong>Key Factors:</strong><ul style="margin: 5px 0;">';
+                forecast.factors.forEach(factor => {
+                    const impactColor = factor.impact > 0 ? '#28a745' : factor.impact < 0 ? '#dc3545' : '#666';
+                    forecastHTML += `<li><strong>${factor.name}:</strong> <span style="color: ${impactColor}">${(factor.impact * 100).toFixed(1)}%</span> - ${factor.description}</li>`;
+                });
+                forecastHTML += '</ul></div>';
+            }
+
+            // Show sample predictions
+            forecastHTML += '<div style="margin-top: 15px;"><strong>Sample Predictions:</strong><br>';
+            [0, 7, 14, 21, 29].forEach(i => {
+                if (predictions[i]) {
+                    forecastHTML += `Day ${i + 1}: ₹${predictions[i].price.toFixed(2)} (${(predictions[i].confidence * 100).toFixed(0)}% confidence)<br>`;
+                }
+            });
+            forecastHTML += '</div>';
+
+            document.getElementById('forecastChart').innerHTML = forecastHTML;
+
+            // Update demand insights
+            document.getElementById('demandInsights').innerHTML = `
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="value">${demand.demand_level}</div>
+                        <div class="label">Demand Level</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value">${demand.region.toUpperCase()}</div>
+                        <div class="label">Region</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value">${demand.seasonal_trend}</div>
+                        <div class="label">Trend</div>
+                    </div>
+                </div>
+                <div style="margin-top: 15px;">
+                    <strong>📍 Recommended Markets:</strong>
+                    <ul style="margin: 10px 0;">
+                        ${demand.regional_markets.slice(0, 5).map(m => `<li>${m}</li>`).join('')}
+                    </ul>
+                </div>
+                <div style="margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 6px;">
+                    <strong>💡 Insight:</strong> ${demand.insights}
+                </div>
             `;
         }
+
+        // Load data on page load with default values
+        window.addEventListener('load', () => {
+            // Optional: Auto-load data
+            // fetchData();
+        });
     </script>
 </body>
 </html>

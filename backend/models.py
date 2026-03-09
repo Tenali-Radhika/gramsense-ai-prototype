@@ -48,14 +48,10 @@ class Recommendation(BaseModel):
     type: str  # 'SELL_NOW' | 'WAIT' | 'CHANGE_MARKET' | 'PLAN_CROP' | 'MONITOR'
     priority: str  # 'HIGH' | 'MEDIUM' | 'LOW'
     explanation: str
-    supportingData: Optional[Any] = None
-    confidence: Optional[float] = None
-    validityPeriod: Optional[dict] = None
-    disclaimers: Optional[List[str]] = None
-    supportingData: Any
-    confidence: float
+    supportingData: Any = None
+    confidence: float = 0.0
     validityPeriod: Optional[Any] = None
-    disclaimers: List[str]
+    disclaimers: List[str] = []
 
 
 class UserContext(BaseModel):

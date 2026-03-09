@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GramSense AI - Browser Compatibility Test</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-top: 0;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .test-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 6px;
+            border-left: 4px solid #ddd;
+        }
+        .test-item.pass {
+            border-left-color: #28a745;
+        }
+        .test-item.fail {
+            border-left-color: #dc3545;
+        }
+        .status {
+            font-weight: bold;
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+        .status.pass {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status.fail {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .summary {
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .summary h2 {
+            margin: 0 0 10px 0;
+        }
+        .browser-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 14px;
+            color: #333;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            margin: 10px 5px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 GramSense AI - Browser Compatibility Test</h1>
+        
+        <div class="browser-info" id="browserInfo">
+            <strong>Browser:</strong> <span id="browserName">Detecting...</span><br>
+            <strong>User Agent:</strong> <span id="userAgent"></span>
+        </div>
+
+        <button onclick="runTests()">▶️ Run Tests</button>
+        <button onclick="testBackendConnection()">🔌 Test Backend Connection</button>
+        <button onclick="location.href='index.html'">🏠 Back to App</button>
+
+        <div id="testResults"></div>
+        <div id="summary"></div>
+    </div>
+
+    <script>
+        // Display browser info
+        document.getElementById('userAgent').textContent = navigator.userAgent;
+        
+        // Detect browser
+        function detectBrowser() {
+            const ua = navigator.userAgent;
+            if (ua.includes('Firefox')) return 'Firefox';
+            if (ua.includes('Safari') && !ua.includes('Chrome')) return 'Safari';
+            if (ua.includes('Edg')) return 'Edge';
+            if (ua.includes('Chrome')) return 'Chrome';
+            return 'Unknown';
+        }
+        document.getElementById('browserName').textContent = detectBrowser();
+
+        function runTests() {
+            const tests = [
+                {
+                    category: 'JavaScript Features',
+                    items: [
+                        { name: 'Fetch API', test: () => typeof fetch !== 'undefined' },
+                        { name: 'LocalStorage', test: () => typeof localStorage !== 'undefined' },
+                        { name: 'Promises', test: () => typeof Promise !== 'undefined' },
+                        { name: 'Async/Await', test: () => (async () => true)() instanceof Promise },
+                        { name: 'Arrow Functions', test: () => (() => true)() },
+                        { name: 'Template Literals', test: () => `test` === 'test' },
+                        { name: 'Const/Let', test: () => { const x = 1; let y = 2; return true; } },
+                        { name: 'Spread Operator', test: () => { const arr = [1, 2]; return [...arr].length === 2; } },
+                        { name: 'Destructuring', test: () => { const {a} = {a: 1}; return a === 1; } },
+                    ]
+                },
+                {
+                    category: 'CSS Features',
+                    items: [
+                        { name: 'CSS Grid', test: () => CSS.supports('display', 'grid') },
+                        { name: 'CSS Flexbox', test: () => CSS.supports('display', 'flex') },
+                        { name: 'CSS Gradients', test: () => CSS.supports('background', 'linear-gradient(red, blue)') },
+                        { name: 'CSS Transforms', test: () => CSS.supports('transform', 'translateY(-2px)') },
+                        { name: 'CSS Transitions', test: () => CSS.supports('transition', 'all 0.3s') },
+                        { name: 'Border Radius', test: () => CSS.supports('border-radius', '8px') },
+                    ]
+                },
+                {
+                    category: 'DOM & APIs',
+                    items: [
+                        { name: 'querySelector', test: () => typeof document.querySelector !== 'undefined' },
+                        { name: 'addEventListener', test: () => typeof document.addEventListener !== 'undefined' },
+                        { name: 'JSON', test: () => typeof JSON !== 'undefined' },
+                        { name: 'Console', test: () => typeof console !== 'undefined' },
+                        { name: 'setTimeout', test: () => typeof setTimeout !== 'undefined' },
+                    ]
+                }
+            ];
+
+            let totalPassed = 0;
+            let totalFailed = 0;
+            let html = '';
+
+            tests.forEach(category => {
+                html += `<div class="test-section">`;
+                html += `<h3>${category.category}</h3>`;
+                
+                category.items.forEach(item => {
+                    let passed = false;
+                    try {
+                        passed = item.test();
+                    } catch (e) {
+                        passed = false;
+                    }
+
+                    if (passed) totalPassed++;
+                    else totalFailed++;
+
+                    const statusClass = passed ? 'pass' : 'fail';
+                    const statusText = passed ? '✅ PASS' : '❌ FAIL';
+                    
+                    html += `
+                        <div class="test-item ${statusClass}">
+                            <span>${item.name}</span>
+                            <span class="status ${statusClass}">${statusText}</span>
+                        </div>
+                    `;
+                });
+                
+                html += `</div>`;
+            });
+
+            document.getElementById('testResults').innerHTML = html;
+
+            // Summary
+            const total = totalPassed + totalFailed;
+            const percentage = Math.round((totalPassed / total) * 100);
+            const overallStatus = percentage === 100 ? '✅ FULLY COMPATIBLE' : 
+                                  percentage >= 90 ? '⚠️ MOSTLY COMPATIBLE' : 
+                                  '❌ COMPATIBILITY ISSUES';
+
+            document.getElementById('summary').innerHTML = `
+                <div class="summary">
+                    <h2>${overallStatus}</h2>
+                    <p style="font-size: 24px; margin: 10px 0;">
+                        ${totalPassed} / ${total} tests passed (${percentage}%)
+                    </p>
+                    <p style="margin: 5px 0;">
+                        Browser: ${detectBrowser()} | 
+                        Passed: ${totalPassed} | 
+                        Failed: ${totalFailed}
+                    </p>
+                </div>
+            `;
+        }
+
+        async function testBackendConnection() {
+            const resultDiv = document.getElementById('testResults');
+            resultDiv.innerHTML = '<div class="test-section"><h3>Testing Backend Connection...</h3></div>';
+
+            try {
+                const response = await fetch('http://localhost:8000/health');
+                const data = await response.json();
+                
+                let html = '<div class="test-section">';
+                html += '<h3>Backend Connection Test</h3>';
+                html += `
+                    <div class="test-item pass">
+                        <span>Backend Status</span>
+                        <span class="status pass">✅ ${data.status.toUpperCase()}</span>
+                    </div>
+                    <div class="test-item pass">
+                        <span>Version</span>
+                        <span class="status pass">${data.version}</span>
+                    </div>
+                `;
+
+                // Test features
+                if (data.features) {
+                    html += '<h4 style="margin-top: 15px;">Enabled Features:</h4>';
+                    for (const [feature, enabled] of Object.entries(data.features)) {
+                        const statusClass = enabled ? 'pass' : 'fail';
+                        const statusText = enabled ? '✅ Enabled' : '❌ Disabled';
+                        html += `
+                            <div class="test-item ${statusClass}">
+                                <span>${feature.replace(/_/g, ' ').toUpperCase()}</span>
+                                <span class="status ${statusClass}">${statusText}</span>
+                            </div>
+                        `;
+                    }
+                }
+
+                html += '</div>';
+                resultDiv.innerHTML = html;
+
+                document.getElementById('summary').innerHTML = `
+                    <div class="summary">
+                        <h2>✅ Backend Connected</h2>
+                        <p>All backend services are operational</p>
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="test-section">
+                        <h3>Backend Connection Test</h3>
+                        <div class="test-item fail">
+                            <span>Backend Connection</span>
+                            <span class="status fail">❌ FAILED</span>
+                        </div>
+                        <p style="color: #dc3545; margin-top: 10px;">
+                            Error: ${error.message}<br>
+                            Make sure the backend server is running on http://localhost:8000
+                        </p>
+                    </div>
+                `;
+
+                document.getElementById('summary').innerHTML = `
+                    <div class="summary" style="background: #dc3545;">
+                        <h2>❌ Backend Unavailable</h2>
+                        <p>Please start the backend server</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Auto-run tests on page load
+        window.addEventListener('load', () => {
+            setTimeout(runTests, 500);
+        });
+    </script>
+</body>
+</html>

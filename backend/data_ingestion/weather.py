@@ -3,16 +3,18 @@ from datetime import datetime, timedelta
 import random
 
 from ..models import Location
+from .cache import cached, weather_cache
 
 
-def fetch_weather_data(location: Location, date_range: Tuple[str, str]) -> List[Dict[str, Any]]:
+@cached(weather_cache, ttl=1800)  # Cache for 30 minutes
+def fetch_weather_data(location: Location, date_range: Tuple[datetime, datetime]) -> List[Dict[str, Any]]:
     """Retrieve weather data for a location between the given date range.
 
     Returns synthetic weather data for demonstration.
     In production, this would integrate with IMD or OpenWeatherMap APIs.
     """
-    start_date = datetime.fromisoformat(date_range[0])
-    end_date = datetime.fromisoformat(date_range[1])
+    start_date = date_range[0] if isinstance(date_range[0], datetime) else datetime.fromisoformat(str(date_range[0]))
+    end_date = date_range[1] if isinstance(date_range[1], datetime) else datetime.fromisoformat(str(date_range[1]))
 
     weather_data = []
     current_date = start_date
@@ -51,6 +53,7 @@ def get_weather_condition(temperature: float, rainfall: float) -> str:
         return "Clear"
 
 
+@cached(weather_cache, ttl=600)  # Cache for 10 minutes
 def get_current_weather_impact(location: Location) -> Dict[str, Any]:
     """Get current weather conditions and their potential impact on crop prices."""
     today = datetime.now().date()

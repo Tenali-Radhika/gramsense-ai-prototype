@@ -2,8 +2,8 @@ from typing import List, Optional
 from datetime import datetime, timedelta, timezone
 import random
 
-from ..models import Recommendation, Location, Forecast, PriceData
-from ..data_ingestion.weather import fetch_weather_data, get_current_weather_impact
+from models import Recommendation, Location, Forecast, PriceData
+from data_ingestion.weather import fetch_weather_data, get_current_weather_impact
 
 
 def generate_selling_recommendation(crop: str, location: Location, quantity: float) -> Recommendation:

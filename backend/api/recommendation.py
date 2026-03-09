@@ -2,15 +2,15 @@ from fastapi import APIRouter, HTTPException, Header
 from typing import List, Optional
 from pydantic import BaseModel
 
-from ..models import Location, Recommendation
-from ..recommendation.engine import (
+from models import Location, Recommendation
+from recommendation.engine import (
     generate_selling_recommendation,
     suggest_optimal_markets,
     provide_crop_planning_advice,
     get_regional_demand_insights,
     handle_farmer_query
 )
-from ..session_manager import session_manager
+from session_manager import session_manager
 
 router = APIRouter()
 

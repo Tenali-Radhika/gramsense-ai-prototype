@@ -5,11 +5,11 @@ import time
 import logging
 from datetime import datetime
 
-from .api import prices, forecast, recommendation, export, feedback
-from .aws_integration import get_aws_service
-from .middleware import rate_limit_middleware, rate_limiter
-from .data_ingestion import get_all_cache_stats
-from .session_manager import session_manager
+from api import prices, forecast, recommendation, export, feedback
+from aws_integration import get_aws_service
+from middleware import rate_limit_middleware, rate_limiter
+from data_ingestion import get_all_cache_stats
+from session_manager import session_manager
 
 # Configure logging
 logging.basicConfig(

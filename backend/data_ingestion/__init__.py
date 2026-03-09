@@ -5,21 +5,21 @@ This module provides functions to fetch mandi prices, weather data,
 and crop calendar information with built-in caching for performance.
 """
 
-from .mandi import (
+from data_ingestion.mandi import (
     fetch_mandi_prices,
     fetch_historical_prices,
     generate_synthetic_price,
 )
-from .weather import (
+from data_ingestion.weather import (
     fetch_weather_data,
     get_current_weather_impact,
     get_weather_condition,
 )
-from .crop_calendar import (
+from data_ingestion.crop_calendar import (
     fetch_crop_calendar,
     get_seasonal_advice,
 )
-from .cache import (
+from data_ingestion.cache import (
     get_all_cache_stats,
     clear_all_caches,
     cleanup_all_caches,

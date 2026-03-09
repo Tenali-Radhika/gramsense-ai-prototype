@@ -3,7 +3,7 @@ from datetime import datetime, timezone, timedelta
 import random
 import math
 
-from ..models import PriceData, Location
+from models import PriceData, Location
 from .cache import cached, price_cache
 
 

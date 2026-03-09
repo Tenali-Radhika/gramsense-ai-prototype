@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException
 from typing import List, Optional
 
-from ..models import Location, PriceData
-from ..data_ingestion.mandi import fetch_mandi_prices
+from models import Location, PriceData
+from data_ingestion.mandi import fetch_mandi_prices
 
 router = APIRouter()
 

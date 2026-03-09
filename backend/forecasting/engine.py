@@ -2,9 +2,9 @@ from datetime import datetime, timedelta, date, timezone
 from typing import List
 import random
 
-from ..models import Forecast, PricePrediction, ForecastFactor, Location
-from ..data_ingestion.mandi import fetch_historical_prices, CROP_DATA
-from ..data_ingestion.weather import get_current_weather_impact
+from models import Forecast, PricePrediction, ForecastFactor, Location
+from data_ingestion.mandi import fetch_historical_prices, CROP_DATA
+from data_ingestion.weather import get_current_weather_impact
 
 
 def generate_price_forecast(crop: str, location: Location, horizon: int = 30) -> Forecast:

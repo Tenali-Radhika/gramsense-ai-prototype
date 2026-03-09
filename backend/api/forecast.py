@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException
 from typing import Optional
 
-from ..models import Location, Forecast
-from ..forecasting.engine import generate_price_forecast
+from models import Location, Forecast
+from forecasting.engine import generate_price_forecast
 
 router = APIRouter()
 

@@ -2,7 +2,7 @@ from typing import List, Tuple, Dict, Any
 from datetime import datetime, timedelta
 import random
 
-from ..models import Location
+from models import Location
 from .cache import cached, weather_cache
 
 

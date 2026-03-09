@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GramSense AI - Rural Market Intelligence</title>
     <style>
+<<<<<<< HEAD
         * { box-sizing: border-box; }
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
@@ -173,16 +174,35 @@
             color: #666;
             margin-top: 5px;
         }
+=======
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f4; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 30px; }
+        .section { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; }
+        input, select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        button { background: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #218838; }
+        .dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .chart { height: 300px; background: #eee; display: flex; align-items: center; justify-content: center; border-radius: 4px; }
+        .recommendation { background: #e9ecef; padding: 15px; border-left: 4px solid #28a745; }
+>>>>>>> ade57df (Move index.html to root for GitHub Pages deployment)
     </style>
 </head>
 <body>
     <div class="container">
         <header>
+<<<<<<< HEAD
             <h1>🌾 GramSense AI</h1>
+=======
+            <h1>GramSense AI</h1>
+>>>>>>> ade57df (Move index.html to root for GitHub Pages deployment)
             <p>Rural Market Intelligence & Decision Support Platform</p>
         </header>
 
         <div class="section">
+<<<<<<< HEAD
             <h2>📍 Crop and Location Selection</h2>
             <div class="form-group">
                 <label for="crop">Select Crop:</label>
@@ -211,11 +231,27 @@
                     <option value="18.5204,73.8567,Pune">Pune</option>
                     <option value="23.0225,72.5714,Ahmedabad">Ahmedabad</option>
                 </select>
+=======
+            <h2>Crop and Location Selection</h2>
+            <div class="form-group">
+                <label for="crop">Select Crop:</label>
+                <select id="crop">
+                    <option value="wheat">Wheat</option>
+                    <option value="rice">Rice</option>
+                    <option value="maize">Maize</option>
+                    <option value="cotton">Cotton</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="location">Location (Latitude, Longitude):</label>
+                <input type="text" id="location" placeholder="e.g., 28.6139, 77.2090" value="28.6139, 77.2090">
+>>>>>>> ade57df (Move index.html to root for GitHub Pages deployment)
             </div>
             <div class="form-group">
                 <label for="days">Historical Days:</label>
                 <input type="number" id="days" value="7" min="1" max="30">
             </div>
+<<<<<<< HEAD
             <button onclick="fetchData()">🔍 Get Market Intelligence</button>
         </div>
 
@@ -241,10 +277,26 @@
             <div class="section">
                 <h3>🏪 Market & Demand Insights</h3>
                 <div id="demandInsights"></div>
+=======
+            <button onclick="fetchData()">Get Market Intelligence</button>
+        </div>
+
+        <div class="dashboard">
+            <div class="section">
+                <h3>Price Trend Dashboard</h3>
+                <div class="chart" id="priceChart">Price Trend Chart</div>
+            </div>
+            <div class="section">
+                <h3>AI Recommendation Panel</h3>
+                <div class="recommendation" id="recommendation">
+                    Select a crop and location to get recommendations.
+                </div>
+>>>>>>> ade57df (Move index.html to root for GitHub Pages deployment)
             </div>
         </div>
 
         <div class="section">
+<<<<<<< HEAD
             <h3>💬 AI Query Assistant</h3>
             <div class="query-input-group">
                 <input type="text" id="query" placeholder="Ask me: What's the best time to sell wheat? Will prices go up?" onkeypress="if(event.key==='Enter') askQuery()">
@@ -256,10 +308,29 @@
 
         <div id="loading" class="section loading" style="display: none;">
             <p>⏳ Loading market intelligence...</p>
+=======
+            <h3>Forecast Graph View</h3>
+            <div class="chart" id="forecastChart">7-Day Price Forecast</div>
+        </div>
+
+        <div class="section">
+            <h3>Market Comparison Screen</h3>
+            <div class="chart" id="comparisonChart">Nearby Market Comparison</div>
+        </div>
+
+        <div class="section">
+            <h3>AI Query Assistant</h3>
+            <div class="form-group">
+                <input type="text" id="query" placeholder="Ask me about prices, weather, or selling advice..." style="width: 70%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                <button onclick="askQuery()" style="padding: 8px 15px;">Ask</button>
+            </div>
+            <div id="queryResponse" class="recommendation" style="margin-top: 10px;"></div>
+>>>>>>> ade57df (Move index.html to root for GitHub Pages deployment)
         </div>
     </div>
 
     <script>
+<<<<<<< HEAD
         const API_BASE = 'http://localhost:8000';
 
         function updateLocation() {
@@ -428,10 +499,81 @@
                             <div class="label">Lowest</div>
                         </div>
                     </div>
+=======
+        async function fetchData() {
+            const crop = document.getElementById('crop').value;
+            const [lat, lon] = document.getElementById('location').value.split(',').map(x => parseFloat(x.trim()));
+            const days = document.getElementById('days').value;
+
+            try {
+                // Fetch historical prices
+                const priceResponse = await fetch(`http://localhost:8000/prices?crop=${crop}&lat=${lat}&lon=${lon}&days=${days}`);
+                const prices = await priceResponse.json();
+
+                // Fetch forecast
+                const forecastResponse = await fetch(`http://localhost:8000/forecast?crop=${crop}&lat=${lat}&lon=${lon}`);
+                const forecast = await forecastResponse.json();
+
+                // Fetch recommendation
+                const recResponse = await fetch(`http://localhost:8000/recommendation?crop=${crop}&lat=${lat}&lon=${lon}&quantity=100`);
+                const recommendation = await recResponse.json();
+
+                // Fetch regional demand
+                const demandResponse = await fetch(`http://localhost:8000/regional_demand?crop=${crop}&lat=${lat}&lon=${lon}`);
+                const demand = await demandResponse.json();
+
+                updateUI(prices, forecast, recommendation, demand);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                document.getElementById('recommendation').innerText = 'Error loading data. Please try again.';
+            }
+        }
+
+        async function askQuery() {
+            const query = document.getElementById('query').value;
+            const crop = document.getElementById('crop').value;
+            const [lat, lon] = document.getElementById('location').value.split(',').map(x => parseFloat(x.trim()));
+
+            if (!query.trim()) return;
+
+            try {
+                const response = await fetch('http://localhost:8000/query_assistant', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        query: query,
+                        crop: crop,
+                        lat: lat,
+                        lon: lon
+                    })
+                });
+                const result = await response.json();
+                document.getElementById('queryResponse').innerHTML = `
+                    <strong>Assistant:</strong> ${result.response}
+                    ${result.suggestion ? `<br><em>Suggestion: ${result.suggestion}</em>` : ''}
+                `;
+            } catch (error) {
+                console.error('Query error:', error);
+                document.getElementById('queryResponse').innerText = 'Sorry, I couldn\'t process your query right now.';
+            }
+        }
+
+        function updateUI(prices, forecast, recommendation, demand) {
+            // Update price chart with historical data
+            if (prices && prices.length > 0) {
+                const latestPrice = prices[0];
+                let priceHistory = prices.slice(0, 7).map(p => `${p.timestamp.split('T')[0]}: ₹${p.price}`).join('<br>');
+                document.getElementById('priceChart').innerHTML = `
+                    <strong>Latest: ₹${latestPrice.price}/kg</strong><br>
+                    <small>Recent History:</small><br>${priceHistory}
+>>>>>>> ade57df (Move index.html to root for GitHub Pages deployment)
                 `;
             }
 
             // Update recommendation
+<<<<<<< HEAD
             const priorityClass = recommendation.priority.toLowerCase();
             const typeEmoji = {
                 'SELL_NOW': '✅',
@@ -528,6 +670,27 @@
             // Optional: Auto-load data
             // fetchData();
         });
+=======
+            document.getElementById('recommendation').innerHTML = `
+                <strong>${recommendation.type}</strong><br>
+                ${recommendation.explanation}<br>
+                <small>Confidence: ${(recommendation.confidence * 100).toFixed(0)}%</small>
+            `;
+
+            // Update forecast chart
+            const predictions = forecast.predictions.slice(0, 7);
+            document.getElementById('forecastChart').innerHTML = predictions.map(p =>
+                `${p.date}: ₹${p.price.toFixed(2)}<br>`
+            ).join('');
+
+            // Update comparison with regional demand
+            document.getElementById('comparisonChart').innerHTML = `
+                <strong>Regional Demand: ${demand.demand_level}</strong><br>
+                <small>Region: ${demand.region}</small><br>
+                <small>Markets: ${demand.regional_markets.slice(0, 3).join(', ')}</small>
+            `;
+        }
+>>>>>>> ade57df (Move index.html to root for GitHub Pages deployment)
     </script>
 </body>
 </html>
